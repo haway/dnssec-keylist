@@ -1,5 +1,6 @@
 #!/bin/bash
 #
+# version 0.1.1
 
 DIR=$1
 DN=$2
