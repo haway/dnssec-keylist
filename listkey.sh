@@ -25,13 +25,13 @@ do
 	inactive2=$(echo $inactive | cut -d':' -f2 )
 	echo -n " +----> "
 
-	grep -q "256" $KEY
-	if [ "$?" == "1" ]; then
+	grep -q "DNSKEY 256" $KEY
+	if [ "$?" == "0" ]; then
 		echo -n "(ZSK)"
 	fi
 
-	grep -q "257" $KEY
-	if [ $? == "1" ]; then
+	grep -q "DNSKEY 257" $KEY
+	if [ "$?" == "0" ]; then
 		echo -n "(KSK)"
 	fi
 
