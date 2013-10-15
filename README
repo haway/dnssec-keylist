@@ -4,11 +4,11 @@ dnssec-keylist
 It is a shell script, that can list DNSSEC ZSK and KSK active or inactive.
 
 $ ./listkey.sh (dir) (domain)
-dir: 
-  Those DNSSEC Keys(ZSK & KSK) in dir(directory).
+	dir: 
+		Those DNSSEC Keys(ZSK & KSK) in dir(directory), if empty then use $(PWD) command.
 
-domain:
-  List only (domian) DNSSEC Keys.
+	domain:
+		List only (domian) DNSSEC Keys.
   
 Example:
 
@@ -25,3 +25,8 @@ Krsync.tw.+005+54391.key
 
 Krsync.tw.+005+45621.key
  +----> (KSK)Always avaiable(UNSET Inactive Time)
+
+
+TODO:
+	
+	
