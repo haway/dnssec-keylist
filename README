@@ -3,7 +3,7 @@ dnssec-keylist
 
 This is a shell script, this script can list DNSSEC ZSK and KSK keys are active or inactive.
 
-$ ./listkey.sh (dir) (domain)
+$ ./dnssec-listkey (dir) (domain)
   dir: 
     Those DNSSEC Keys(ZSK & KSK) in dir(directory), if empty then use `pwd` command.
 
@@ -11,7 +11,7 @@ $ ./listkey.sh (dir) (domain)
     List this domain name DNSSEC Keys only. If empty then display all keys.
   
 Example:
-[root@asus-srv4 dnssec-keylist]# ./listkey.sh /var/named/chroot/etc/dnskey/
+[root@asus-srv4 dnssec-keylist]# ./dnssec-listkey /var/named/chroot/etc/dnskey/
 ====================================
 *DN :
 *NOW: 1381831611
@@ -26,9 +26,12 @@ Krsync.tw.+005+45621.key
  +----> (KSK)Always avaiable(UNSET Inactive Time)
 
 
-TODO:
+v0.2
  增加 Key 剩餘時間的顯示, 譬如:
  Krsync.tw.+005+45621.key
  +----> (KSK)Avaiable( Now + 26days expire)
 	
+
+TODO:
+ Display key active time if active time > NOW
 	

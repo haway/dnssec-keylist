@@ -40,7 +40,8 @@ do
 	else
 		bcr=$(echo "$inactive2 > $NOW" | bc)
 		if [ "$bcr" == "1" ]; then
-			echo "Avaiable";
+			days=$(echo "($inactive2 - $NOW) / 86400" | bc )
+			echo "Avaiable( ~+$days days expire )";
 		else
 			echo "Inactive";
 		fi
