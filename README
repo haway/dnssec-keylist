@@ -13,17 +13,17 @@ $ ./dnssec-listkey (dir) (domain)
 Example:
 [root@asus-srv4 dnssec-keylist]# ./dnssec-listkey /var/named/chroot/etc/dnskey/
 ====================================
-*DN :
-*NOW: 1381831611
+*DN :  
+*NOW: 1382363919 
 ====================================
-Krsync.tw.+005+59091.key
- +----> (KSK)Always avaiable(UNSET Inactive Time)
-
-Krsync.tw.+005+54391.key
+Krsync.tw.+005+64281.key
+ +----> (ZSK)Avaiable( P:-3d A:-3d I:26d D:31d )
+ 
+Krsync.tw.+005+21075.key
  +----> (ZSK)Inactive
-
-Krsync.tw.+005+45621.key
- +----> (KSK)Always avaiable(UNSET Inactive Time)
+ 
+Krsync.tw.+005+46395.key
+ +----> (ZSK)Avaiable( P:56d A:57d I:86d D:87d )
 
 
 v0.2
@@ -33,5 +33,4 @@ v0.2
 	
 
 TODO:
- Display key active time if active time > NOW
 	

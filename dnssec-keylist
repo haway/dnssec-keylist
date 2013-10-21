@@ -6,7 +6,7 @@ DIR=$1
 DN=$2
 
 if [ "x$DIR" == "x" ];then
-	DIR=$(PWD)
+	DIR=$(pwd)
 fi
 
 NOW=$(date '+%s')
@@ -21,8 +21,17 @@ echo "===================================="
 for KEY in $KEYS
 do
 	echo "$(basename $KEY)"
+	publish=$(dnssec-settime -p P -u $KEY)
+	publish2=$(echo $publish | cut -d':' -f2 )
+
+	active=$(dnssec-settime -p A -u $KEY)
+	active2=$(echo $active | cut -d':' -f2 )
+
 	inactive=$(dnssec-settime -p I -u $KEY)
 	inactive2=$(echo $inactive | cut -d':' -f2 )
+
+	delete=$(dnssec-settime -p D -u $KEY)
+	delete2=$(echo $delete | cut -d':' -f2 )
 	echo -n " +----> "
 
 	grep -q "DNSKEY 256" $KEY
@@ -40,10 +49,22 @@ do
 	else
 		bcr=$(echo "$inactive2 > $NOW" | bc)
 		if [ "$bcr" == "1" ]; then
-			days=$(echo "($inactive2 - $NOW) / 86400" | bc )
-			echo "Avaiable( ~+$days days expire )";
+			publish_days=$(echo "($publish2 - $NOW) / 86400" | bc )
+			active_days=$(echo "($active2 - $NOW) / 86400" | bc )
+			inactive_days=$(echo "($inactive2 - $NOW) / 86400" | bc )
+			delete_days=$(echo "($delete2 - $NOW) / 86400" | bc )
+			echo -n "Avaiable( "
+			echo -n "P:${publish_days}d "
+			echo -n "A:${active_days}d "
+			echo -n "I:${inactive_days}d "
+			echo "D:${delete_days}d )"
+			
+			inactive_ture=$(echo "$inactive_days < 7" | bc )
+			if [ "$inactive_ture" == "1" ]; then
+				echo " +----> expire in $inactive_days days!!"
+			fi
 		else
-			echo "Inactive";
+			echo "Inactive"
 		fi
 	fi
 	echo " "
