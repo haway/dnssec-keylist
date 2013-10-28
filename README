@@ -13,24 +13,24 @@ $ ./dnssec-listkey (dir) (domain)
 Example:
 [root@asus-srv4 dnssec-keylist]# ./dnssec-listkey /var/named/chroot/etc/dnskey/
 ====================================
-*DN :  
-*NOW: 1382363919 
+* DN :  
+* NOW: 1383003782 
 ====================================
-Krsync.tw.+005+64281.key
- +----> (ZSK)Avaiable( P:-3d A:-3d I:26d D:31d )
+############### KSK list ################
+Krsync.tw.+005+32212.key
+ +----> (KSK)Always avaiable(UNSET Inactive Time)
  
-Krsync.tw.+005+21075.key
- +----> (ZSK)Inactive
- 
-Krsync.tw.+005+46395.key
- +----> (ZSK)Avaiable( P:56d A:57d I:86d D:87d )
-
+############### ZSK list ################
+Krsync.tw.+005+32212.key
+ +----> (ZSK)Always avaiable(UNSET Inactive Time)
 
 v0.2
  增加 Key 剩餘時間的顯示, 譬如:
  Krsync.tw.+005+45621.key
  +----> (KSK)Avaiable( Now + 26days expire)
-	
+
+v0.3
+ Change display format, KSK first, than ZSK
 
 TODO:
 	

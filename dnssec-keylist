@@ -11,12 +11,12 @@ fi
 NOW=$(date '+%s')
 
 echo "===================================="
-echo "*DN : $DN "
-echo "*NOW: $NOW "
-echo "============= KSK =============="
+echo "* DN : $DN "
+echo "* NOW: $NOW "
+echo "===================================="
 
 
-function xshowkey(){
+xshowkey(){
 	KEYS=$1
 	TYPE=$2
 
@@ -65,8 +65,10 @@ function xshowkey(){
 	done
 }
 
-KSKs=$(grep -H "DNSKEY 257" $DIR/*.key | cut -d":" -f 1)
-xshowkey $KSKs "KSK"
+echo "############### KSK list ################"
+KSKs=$(grep -H "DNSKEY 257" $DIR/K$DN*.key | cut -d":" -f1)
+xshowkey $KSKs 'KSK'
 
-ZSKs=$(grep -H "DNSKEY 256" $DIR/*.key | cut -d":" -f 1)
-xshowkey $KSKs "ZSK"
+echo "############### ZSK list ################"
+ZSKs=$(grep -H "DNSKEY 256" $DIR/K$DN*.key | cut -d":" -f1)
+xshowkey $KSKs 'ZSK'
