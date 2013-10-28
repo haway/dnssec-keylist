@@ -1,6 +1,5 @@
 #!/bin/bash
 #
-# version 0.1.1
 
 DIR=$1
 DN=$2
@@ -10,62 +9,64 @@ if [ "x$DIR" == "x" ];then
 fi
 
 NOW=$(date '+%s')
-KEYS=$(find $DIR -name "K$DN*.key")
 
 echo "===================================="
 echo "*DN : $DN "
 echo "*NOW: $NOW "
-echo "===================================="
+echo "============= KSK =============="
 
 
-for KEY in $KEYS
-do
-	echo "$(basename $KEY)"
-	publish=$(dnssec-settime -p P -u $KEY)
-	publish2=$(echo $publish | cut -d':' -f2 )
+function xshowkey(){
+	KEYS=$1
+	TYPE=$2
 
-	active=$(dnssec-settime -p A -u $KEY)
-	active2=$(echo $active | cut -d':' -f2 )
+	for KEY in $KEYS
+	do
+		echo "$(basename $KEY)"
+		publish=$(dnssec-settime -p P -u $KEY)
+		publish2=$(echo $publish | cut -d':' -f2 )
+	
+		active=$(dnssec-settime -p A -u $KEY)
+		active2=$(echo $active | cut -d':' -f2 )
+	
+		inactive=$(dnssec-settime -p I -u $KEY)
+		inactive2=$(echo $inactive | cut -d':' -f2 )
 
-	inactive=$(dnssec-settime -p I -u $KEY)
-	inactive2=$(echo $inactive | cut -d':' -f2 )
+		delete=$(dnssec-settime -p D -u $KEY)
+		delete2=$(echo $delete | cut -d':' -f2 )
+		echo -n " +----> "
 
-	delete=$(dnssec-settime -p D -u $KEY)
-	delete2=$(echo $delete | cut -d':' -f2 )
-	echo -n " +----> "
+		echo -n "($TYPE)"
 
-	grep -q "DNSKEY 256" $KEY
-	if [ "$?" == "0" ]; then
-		echo -n "(ZSK)"
-	fi
-
-	grep -q "DNSKEY 257" $KEY
-	if [ "$?" == "0" ]; then
-		echo -n "(KSK)"
-	fi
-
-	if [ "$inactive2" == " UNSET" ]; then
-		echo "Always avaiable(UNSET Inactive Time)"
-	else
-		bcr=$(echo "$inactive2 > $NOW" | bc)
-		if [ "$bcr" == "1" ]; then
-			publish_days=$(echo "($publish2 - $NOW) / 86400" | bc )
-			active_days=$(echo "($active2 - $NOW) / 86400" | bc )
-			inactive_days=$(echo "($inactive2 - $NOW) / 86400" | bc )
-			delete_days=$(echo "($delete2 - $NOW) / 86400" | bc )
-			echo -n "Avaiable( "
-			echo -n "P:${publish_days}d "
-			echo -n "A:${active_days}d "
-			echo -n "I:${inactive_days}d "
-			echo "D:${delete_days}d )"
-			
-			inactive_ture=$(echo "$inactive_days < 7" | bc )
-			if [ "$inactive_ture" == "1" ]; then
-				echo " +----> expire in $inactive_days days!!"
-			fi
+		if [ "$inactive2" == " UNSET" ]; then
+			echo "Always avaiable(UNSET Inactive Time)"
 		else
-			echo "Inactive"
+			bcr=$(echo "$inactive2 > $NOW" | bc)
+			if [ "$bcr" == "1" ]; then
+				publish_days=$(echo "($publish2 - $NOW) / 86400" | bc )
+				active_days=$(echo "($active2 - $NOW) / 86400" | bc )
+				inactive_days=$(echo "($inactive2 - $NOW) / 86400" | bc )
+				delete_days=$(echo "($delete2 - $NOW) / 86400" | bc )
+				echo -n "Avaiable( "
+				echo -n "P:${publish_days}d "
+				echo -n "A:${active_days}d "
+				echo -n "I:${inactive_days}d "
+				echo "D:${delete_days}d )"
+				
+				inactive_ture=$(echo "$inactive_days < 7" | bc )
+				if [ "$inactive_ture" == "1" ]; then
+					echo " +----> expire in $inactive_days days!!"
+				fi
+			else
+				echo "Inactive"
+			fi
 		fi
-	fi
-	echo " "
-done
+		echo " "
+	done
+}
+
+KSKs=$(grep -H "DNSKEY 257" $DIR/*.key | cut -d":" -f 1)
+xshowkey $KSKs "KSK"
+
+ZSKs=$(grep -H "DNSKEY 256" $DIR/*.key | cut -d":" -f 1)
+xshowkey $KSKs "ZSK"
