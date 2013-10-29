@@ -9,16 +9,17 @@ if [ "x$DIR" == "x" ];then
 fi
 
 NOW=$(date '+%s')
+NOW_str=$(date '+%F %T')
 
-echo "===================================="
-echo "* DN : $DN "
-echo "* NOW: $NOW "
-echo "===================================="
+echo ""
+echo "DN : $DN "
+echo "NOW: $NOW_str"
+echo ""
 
-
-xshowkey(){
+keyshow(){
 	KEYS=$1
 	TYPE=$2
+	DN=$3
 
 	for KEY in $KEYS
 	do
@@ -65,10 +66,10 @@ xshowkey(){
 	done
 }
 
-echo "############### KSK list ################"
+echo "========================= KSK list ========================="
 KSKs=$(grep -H "DNSKEY 257" $DIR/K$DN*.key | cut -d":" -f1)
-xshowkey $KSKs 'KSK'
+keyshow "$KSKs" 'KSK'
 
-echo "############### ZSK list ################"
+echo "========================= ZSK list ========================="
 ZSKs=$(grep -H "DNSKEY 256" $DIR/K$DN*.key | cut -d":" -f1)
-xshowkey $KSKs 'ZSK'
+keyshow "$ZSKs" 'ZSK'
