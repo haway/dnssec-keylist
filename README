@@ -11,18 +11,24 @@ $ ./dnssec-listkey (dir) (domain)
     List this domain name DNSSEC Keys only. If empty then display all keys.
   
 Example:
-[root@asus-srv4 dnssec-keylist]# ./dnssec-listkey /var/named/chroot/etc/dnskey/
-====================================
-* DN :  
-* NOW: 1383003782 
-====================================
-############### KSK list ################
+root@debian:/etc/bind/dnskey# ~haway/project/dnssec-keylist/dnssec-keylist 
+
+DN :  
+NOW: 2013-10-30 16:02:11
+
+========================= KSK list =========================
 Krsync.tw.+005+32212.key
  +----> (KSK)Always avaiable(UNSET Inactive Time)
  
-############### ZSK list ################
-Krsync.tw.+005+32212.key
- +----> (ZSK)Always avaiable(UNSET Inactive Time)
+========================= ZSK list =========================
+Krsync.tw.+005+21075.key
+ +----> (ZSK)Inactive
+ 
+Krsync.tw.+005+46395.key
+ +----> (ZSK)Avaiable( P:47d A:48d I:77d D:78d )
+ 
+Krsync.tw.+005+64281.key
+ +----> (ZSK)Avaiable( P:-12d A:-12d I:17d D:22d )
 
 v0.2
  增加 Key 剩餘時間的顯示, 譬如:
@@ -31,6 +37,9 @@ v0.2
 
 v0.3
  Change display format, KSK first, than ZSK
+ 
+v0.3.1
+ Fix bug of v0.3
 
 TODO:
 	
