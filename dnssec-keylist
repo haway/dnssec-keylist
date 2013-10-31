@@ -4,6 +4,12 @@
 DIR=$1
 DN=$2
 
+KSK_Active_Keys=0
+KSK_Inactive_Keys=0
+
+ZSK_Active_Keys=0
+ZSK_Inactive_Keys=0
+
 if [ "x$DIR" == "x" ];then
 	DIR=$(pwd)
 fi
@@ -41,6 +47,7 @@ keyshow(){
 
 		if [ "$inactive2" == " UNSET" ]; then
 			echo "Always avaiable(UNSET Inactive Time)"
+			${TYPE}_Active_Keys=$( echo "$${TYPE}_Active_Keys + 1" | bc )
 		else
 			bcr=$(echo "$inactive2 > $NOW" | bc)
 			if [ "$bcr" == "1" ]; then
@@ -58,18 +65,28 @@ keyshow(){
 				if [ "$inactive_ture" == "1" ]; then
 					echo " +----> expire in $inactive_days days!!"
 				fi
+				${TYPE}_Active_Keys=$( echo "${TYPE}_Active_Keys + 1" | bc )
 			else
 				echo "Inactive"
+				${TYPE}_Inactive_Keys=$( echo "${TYPE}_Inactive_Keys + 1" | bc )
 			fi
 		fi
 		echo " "
 	done
+
+	echo "${TYPE}_Active_keys: ${TYPE}_Active_Keys"
+	echo "${TYPE}_Inactive_Keys: ${TYPE}_Inactive_Keys"
 }
 
 echo "========================= KSK list ========================="
 KSKs=$(grep -H "DNSKEY 257" $DIR/K$DN*.key | cut -d":" -f1)
 keyshow "$KSKs" 'KSK'
+echo ""
+
+echo "KSK_Active_Keys: $KSK_Active_Keys"
 
 echo "========================= ZSK list ========================="
 ZSKs=$(grep -H "DNSKEY 256" $DIR/K$DN*.key | cut -d":" -f1)
 keyshow "$ZSKs" 'ZSK'
+echo ""
+
