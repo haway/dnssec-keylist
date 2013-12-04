@@ -3,12 +3,12 @@ dnssec-keylist
 
 This is a shell script, this script can list DNSSEC ZSK and KSK keys are active or inactive.
 
-$ ./dnssec-listkey (dir) (domain)
-  dir: 
-    Those DNSSEC Keys(ZSK & KSK) in dir(directory), if empty then use `pwd` command.
-
+$ ./dnssec-listkey (domain) (dir)
   domain:
     List this domain name DNSSEC Keys only. If empty then display all keys.
+
+  dir: 
+    Those DNSSEC Keys(ZSK & KSK) in dir(directory), if empty then use `pwd` command.
   
 Example:
 root@debian:/etc/bind/dnskey# ~haway/project/dnssec-keylist/dnssec-keylist 
@@ -30,16 +30,25 @@ Krsync.tw.+005+46395.key
 Krsync.tw.+005+64281.key
  +----> (ZSK)Avaiable( P:-12d A:-12d I:17d D:22d )
 
+************* Summary of Keys *************
+
+KSK_Active_Keys: 1              ZSK_Active_Keys: 2
+KSK_Inactive_Keys: 0            ZSK_Inactive_Keys: 1
+
+************* Summary of Keys *************
+
+v0.4
+ Add new function "Summary of keys"
+ Exchange Arg1 and Arg2
+
+v0.3.1
+ Fix bug of v0.3
+
+v0.3
+ Change display format, KSK first, than ZSK
+
 v0.2
  增加 Key 剩餘時間的顯示, 譬如:
  Krsync.tw.+005+45621.key
  +----> (KSK)Avaiable( Now + 26days expire)
 
-v0.3
- Change display format, KSK first, than ZSK
- 
-v0.3.1
- Fix bug of v0.3
-
-TODO:
-	
