@@ -25,7 +25,6 @@ echo ""
 keyshow(){
 	KEYS=$1
 	TYPE=$2
-	DN=$3
 
 	for KEY in $KEYS
 	do
