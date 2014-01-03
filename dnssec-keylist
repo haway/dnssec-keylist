@@ -1,6 +1,7 @@
 #!/bin/bash
 #
 
+Version='v0.5'
 DN=$1
 DIR=$2
 
@@ -21,6 +22,19 @@ echo ""
 echo "DN : $DN "
 echo "NOW: $NOW_str"
 echo ""
+
+showds(){
+	key=$1
+	IFS_SAVE=$IFS
+	IFS="
+"
+	ds_list=$(dnssec-dsfromkey $key | sed 's/.*IN //i')
+	for ds in $ds_list
+	do
+		echo "	+----> $ds"	
+	done
+	IFS=$IFS_SAVE
+}
 
 keyshow(){
 	KEYS=$1
@@ -46,6 +60,10 @@ keyshow(){
 
 		if [ "$inactive2" = " UNSET" ]; then
 			echo "Always avaiable(UNSET Inactive Time)"
+			if [ "$TYPE" = "KSK" ]; then 
+				showds $KEY 
+			fi
+
 			eval KeyAmount=\$${TYPE}_Active_Keys
 			eval ${TYPE}_Active_Keys=$( echo "$KeyAmount + 1 " | bc )
 		else
@@ -65,6 +83,9 @@ keyshow(){
 				if [ "$inactive_ture" -eq 1 ]; then
 					echo " +----> expire in $inactive_days days!!"
 				fi
+				if [ "$TYPE" = "KSK" ]; then 
+					showds $KEY 
+				fi
 
 				eval KeyAmount=\$${TYPE}_Active_Keys
 				eval ${TYPE}_Active_Keys=$( echo "$KeyAmount + 1 " | bc )
@@ -77,18 +98,16 @@ keyshow(){
 		echo " "
 	done
 
-	#echo -n "${TYPE}_Active_Keys: "; eval echo \$${TYPE}_Active_Keys
-	#echo -n "${TYPE}_Inactive_keys: "; eval echo \$${TYPE}_Inactive_Keys
 }
-
-echo "========================= KSK list ========================="
-KSKs=$(grep -H "DNSKEY 257" $DIR/K$DN*.key | cut -d":" -f1)
-keyshow "$KSKs" 'KSK'
-echo ""
 
 echo "========================= ZSK list ========================="
 ZSKs=$(grep -H "DNSKEY 256" $DIR/K$DN*.key | cut -d":" -f1)
 keyshow "$ZSKs" 'ZSK'
+echo ""
+
+echo "========================= KSK list ========================="
+KSKs=$(grep -H "DNSKEY 257" $DIR/K$DN*.key | cut -d":" -f1)
+keyshow "$KSKs" 'KSK'
 
 echo "************* Summary of Keys *************"
 echo ""

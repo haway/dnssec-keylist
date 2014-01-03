@@ -15,10 +15,6 @@ root@debian:/etc/bind/dnskey# ~haway/project/dnssec-keylist/dnssec-keylist
 
 DN :  
 NOW: 2013-10-30 16:02:11
-
-========================= KSK list =========================
-Krsync.tw.+005+32212.key
- +----> (KSK)Always avaiable(UNSET Inactive Time)
  
 ========================= ZSK list =========================
 Krsync.tw.+005+21075.key
@@ -30,12 +26,22 @@ Krsync.tw.+005+46395.key
 Krsync.tw.+005+64281.key
  +----> (ZSK)Avaiable( P:-12d A:-12d I:17d D:22d )
 
+========================= KSK list =========================
+Krsync.tw.+005+24526.key
+ +----> (KSK)Avaiable( P:-2d A:-2d I:364d D:365d )
+        +----> DS 24526 5 1 9C19DB373D09423DC3512540A5815AD61CF3BAB9
+        +----> DS 24526 5 2 718CA14313226710DDB9C6E025717FCA86FF40F9A0BEF421A4ECBA3D 7677D7F8
+
 ************* Summary of Keys *************
 
 KSK_Active_Keys: 1              ZSK_Active_Keys: 2
 KSK_Inactive_Keys: 0            ZSK_Inactive_Keys: 1
 
 ************* Summary of Keys *************
+
+v0.5
+ Add new function showds, it can display DS of KSK via dnssec-dsfromkey command.
+ Move KSK list below of ZSK list
 
 v0.4
  Add new function "Summary of keys"
